@@ -5,6 +5,7 @@ let private shortDescriptionCore (statement : Stmt<_, _>) =
     match statement with
     | AlterTableStmt _ -> "ALTER TABLE"
     | CreateIndexStmt _ -> "CREATE INDEX"
+    | CreateSchemaStmt _ -> "CREATE SCHEMA"
     | CreateTableStmt _ -> "CREATE TABLE"
     | CreateViewStmt _ -> "CREATE VIEW"
     | DeleteStmt _ -> "DELETE"

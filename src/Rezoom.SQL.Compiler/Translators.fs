@@ -55,6 +55,7 @@ type StatementTranslator() =
     abstract member ColumnConstraint : table : TObjectName * constr : TColumnConstraint -> Fragments
     abstract member ColumnDefinition : table : TObjectName * col : TColumnDef -> Fragments
     abstract member CreateTableDefinition : table : TObjectName * create : TCreateTableDefinition -> Fragments
+    abstract member CreateSchema : create : TCreateSchemaStmt -> Fragments
     abstract member CreateTable : create : TCreateTableStmt -> Fragments
     abstract member AlterTable : alter : TAlterTableStmt -> Fragments
     abstract member CreateView : create : TCreateViewStmt -> Fragments

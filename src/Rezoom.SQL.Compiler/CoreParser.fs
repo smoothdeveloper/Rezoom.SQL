@@ -1006,13 +1006,21 @@ let private createTableDefinition =
                 |> Seq.toArray
         }
 
+let private createSchemaStmt =
+  %% kw "CREATE"
+  -? kw "SCHEMA"
+  -- +.objectName
+  -|> fun name ->
+      {   SchemaName = name
+      }
+
 let private createTableAs =
     %[  %% kw "AS" -- +.selectStmt -|> fun select _ -> CreateAsSelect select
         %% +.createTableDefinition -|> fun def tblName -> CreateAsDefinition (def tblName)
     ]
 
 let private temporary = %(zeroOrOne * [kw "TEMPORARY"; kw "TEMP"])
-        
+      
 let private createTableStmt =
     %% kw "CREATE"
     -- +.temporary
@@ -1186,6 +1194,7 @@ let private cteStmt =
 
 let coreStmt =
     %[  %% +.alterTableStmt -|> AlterTableStmt
+        %% +.createSchemaStmt -|> CreateSchemaStmt
         %% +.createIndexStmt -|> CreateIndexStmt
         %% +.createTableStmt -|> CreateTableStmt
         %% +.createViewStmt -|> CreateViewStmt
