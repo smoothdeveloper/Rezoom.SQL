@@ -582,11 +582,15 @@ type [<NoComparison>] CreateTableDefinition<'t, 'e> =
 type [<NoComparison>] CreateTableAs<'t, 'e> =
     | CreateAsDefinition of CreateTableDefinition<'t, 'e>
     | CreateAsSelect of SelectStmt<'t, 'e>
-
+    
 type [<NoComparison>] CreateTableStmt<'t, 'e> =
     {   Temporary : bool
         Name : ObjectName<'t>
         As : CreateTableAs<'t, 'e>
+    }
+
+type [<NoComparison>] CreateSchemaStmt<'t> =
+    {   SchemaName : ObjectName<'t>  
     }
 
 type [<NoComparison>] CreateIndexStmt<'t, 'e> =
@@ -703,6 +707,7 @@ type [<NoComparison>] VendorStmt<'t, 'e> =
 and [<NoComparison>] Stmt<'t, 'e> =
     | AlterTableStmt of AlterTableStmt<'t, 'e>
     | CreateIndexStmt of CreateIndexStmt<'t, 'e>
+    | CreateSchemaStmt of CreateSchemaStmt<'t>
     | CreateTableStmt of CreateTableStmt<'t, 'e>
     | CreateViewStmt of CreateViewStmt<'t, 'e>
     | DeleteStmt of DeleteStmt<'t, 'e>
