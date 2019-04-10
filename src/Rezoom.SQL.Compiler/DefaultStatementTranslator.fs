@@ -358,7 +358,7 @@ type DefaultStatementTranslator(expectedVendorName : Name, indexer : IParameterI
             yield ws
             yield text "SCHEMA"
             yield ws
-            yield! this.Expr.ObjectName(create.SchemaName)
+            yield this.Expr.Name(create.SchemaName)
         }
     override this.CreateTable(create) =
         seq {
