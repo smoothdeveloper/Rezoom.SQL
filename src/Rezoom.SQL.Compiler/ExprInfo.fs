@@ -134,6 +134,7 @@ and [<NoComparison>]
 and [<NoComparison>]
     [<NoEquality>]
     ObjectInfo<'t> =
+    //| Schema of Schema
     | TableLike of 't TableLikeExprInfo
     | Index of SchemaIndex
     | Missing
@@ -182,7 +183,7 @@ type TCompoundTerm = CompoundTerm<ColumnType ObjectInfo, ColumnType ExprInfo>
 type TForeignKeyClause = ForeignKeyClause<ColumnType ObjectInfo>
 type TCreateTableDefinition = CreateTableDefinition<ColumnType ObjectInfo, ColumnType ExprInfo>
 type TCreateTableStmt = CreateTableStmt<ColumnType ObjectInfo, ColumnType ExprInfo>
-type TCreateSchemaStmt = CreateSchemaStmt<ColumnType ObjectInfo>
+type TCreateSchemaStmt = CreateSchemaStmt<ColumnType ObjectInfo, ColumnType ExprInfo>
 type TSelectCore = SelectCore<ColumnType ObjectInfo, ColumnType ExprInfo>
 type TJoinConstraint = JoinConstraint<ColumnType ObjectInfo, ColumnType ExprInfo>
 type TJoin = Join<ColumnType ObjectInfo, ColumnType ExprInfo>

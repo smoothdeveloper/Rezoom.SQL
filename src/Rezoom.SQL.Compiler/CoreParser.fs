@@ -1009,7 +1009,7 @@ let private createTableDefinition =
 let private createSchemaStmt =
   %% kw "CREATE"
   -? kw "SCHEMA"
-  -- +.objectName
+  -- +.name
   -|> fun name ->
       {   SchemaName = name
       }

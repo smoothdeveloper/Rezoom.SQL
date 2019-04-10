@@ -633,7 +633,9 @@ type private TypeChecker(cxt : ITypeInferenceContext, scope : InferredSelectScop
         {   Columns = columns
             Constraints = createTable.Constraints |> rmap (fun con -> this.TableConstraint(con, creating))
         }
-
+    member this.CreateSchema(createSchema: CreateSchemaStmt) =
+        // type checks!
+        { SchemaName = createSchema.SchemaName }
     member this.CreateTable(createTable : CreateTableStmt) =
         let name = this.ObjectName(createTable.Name, true)
         let name =
@@ -775,7 +777,9 @@ type private TypeChecker(cxt : ITypeInferenceContext, scope : InferredSelectScop
                 {   Table = tbl
                     Alteration = this.Alteration(tbl, alter.Alteration)
                 }
+        
         | CreateIndexStmt index -> CreateIndexStmt <| this.CreateIndex(index)
+        | CreateSchemaStmt createSchema -> CreateSchemaStmt <| this.CreateSchema(createSchema)
         | CreateTableStmt createTable -> CreateTableStmt <| this.CreateTable(createTable)
         | CreateViewStmt createView -> CreateViewStmt <| this.CreateView(createView)
         | DeleteStmt delete -> DeleteStmt <| this.Delete(delete)

@@ -12,6 +12,7 @@ type ASTMapping<'t1, 'e1, 't2, 'e2>(mapT : 't1 -> 't2, mapE : 'e1 -> 'e2) =
         {   Operator = unary.Operator
             Operand = this.Expr(unary.Operand)
         }
+    member this.Name = Name
     member this.ObjectName(objectName : ObjectName<'t1>) =
         {   SchemaName = objectName.SchemaName
             ObjectName = objectName.ObjectName
@@ -278,8 +279,8 @@ type ASTMapping<'t1, 'e1, 't2, 'e2>(mapT : 't1 -> 't2, mapE : 'e1 -> 'e2) =
             Constraints = createTable.Constraints |> rmap this.TableConstraint
         }
 
-    member this.CreateSchema(createSchemaStmt: CreateSchemaStmt<'t1>) =
-        { SchemaName = this.ObjectName(createSchemaStmt.SchemaName)        
+    member this.CreateSchema(createSchemaStmt: CreateSchemaStmt<'t1,'e1>) =
+        { SchemaName = createSchemaStmt.SchemaName
         }
     member this.CreateTable(createTable : CreateTableStmt<'t1, 'e1>) =
         {   Temporary = createTable.Temporary

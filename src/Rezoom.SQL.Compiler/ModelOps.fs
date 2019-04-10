@@ -47,7 +47,6 @@ let getRequiredSchema (schemaName: Name option WithSource) =
 
 let getRequiredObject objectTypeName (name : QualifiedObjectName WithSource) =
     stateful {
-        let! model = State.get
         let! schema = name.Map(fun n -> Some n.SchemaName) |> getRequiredSchema
         return
             match schema.Objects |> Map.tryFind name.Value.ObjectName with
@@ -91,7 +90,6 @@ let putSchema (schema : Schema) =
 /// Create or update an object within an existing schema in the model.
 let putObject (name : QualifiedObjectName WithSource) (obj : SchemaObject) =
     stateful {
-        let! model = State.get
         let! schema = name.Map(fun n -> Some n.SchemaName) |> getRequiredSchema
         let newSchema = { schema with Objects = schema.Objects |> Map.add name.Value.ObjectName obj }
         return! putSchema newSchema
@@ -100,7 +98,6 @@ let putObject (name : QualifiedObjectName WithSource) (obj : SchemaObject) =
 /// Remove an existing object from the model.
 let removeObject (name : QualifiedObjectName WithSource) =
     stateful {
-        let! model = State.get
         let! schema = name.Map(fun n -> Some n.SchemaName) |> getRequiredSchema
         let newSchema = { schema with Objects = schema.Objects |> Map.remove name.Value.ObjectName }
         return! putSchema newSchema

@@ -8,9 +8,8 @@ type private ModelChange(model : Model, inference : ITypeInferenceContext) =
         stateful {
             let! model = State.get
             let schemas = 
-                create.SchemaName.SchemaName
-                |> function | Some name -> model.Schemas |> Map.add name { SchemaName = name; Objects = Map.empty }
-                            | None -> model.Schemas
+                create.SchemaName
+                |> fun name -> model.Schemas |> Map.add name { SchemaName = name; Objects = Map.empty }
             return { model with Schemas = schemas }
         } |> State.runForOutputState model |> Some
     member private this.CreateTable(create : InfCreateTableStmt) =

@@ -195,6 +195,7 @@ type private ReferenceFinder(model : Model) =
         | UpdateStmt update -> this.Update(update)
         | AlterTableStmt _
         | CreateIndexStmt _
+        | CreateSchemaStmt _
         | CreateTableStmt _
         | CreateViewStmt _
         | DropObjectStmt _ -> ()
