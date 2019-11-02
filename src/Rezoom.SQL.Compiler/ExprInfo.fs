@@ -134,13 +134,14 @@ and [<NoComparison>]
 and [<NoComparison>]
     [<NoEquality>]
     ObjectInfo<'t> =
-    //| Schema of Schema
+    | Schema of Schema
     | TableLike of 't TableLikeExprInfo
     | Index of SchemaIndex
     | Missing
     member this.Idempotent =
         match this with
         | TableLike t -> t.Query.Idempotent
+        | Schema
         | Index _
         | Missing -> true
     member this.Table =
@@ -154,7 +155,7 @@ and [<NoComparison>]
         | TableLike t -> TableLike (t.Map(f))
         | Index i -> Index i
         | Missing -> Missing
-
+        | Schema -> Schema
 
 and TSelectStmt = SelectStmt<ColumnType ObjectInfo, ColumnType ExprInfo>
 and TCreateViewStmt = CreateViewStmt<ColumnType ObjectInfo, ColumnType ExprInfo>
