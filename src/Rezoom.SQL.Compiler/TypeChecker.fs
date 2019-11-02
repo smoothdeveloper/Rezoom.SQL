@@ -633,9 +633,10 @@ type private TypeChecker(cxt : ITypeInferenceContext, scope : InferredSelectScop
         {   Columns = columns
             Constraints = createTable.Constraints |> rmap (fun con -> this.TableConstraint(con, creating))
         }
+
     member this.CreateSchema(createSchema: CreateSchemaStmt) =
-        // type checks!
         { SchemaName = createSchema.SchemaName }
+
     member this.CreateTable(createTable : CreateTableStmt) =
         let name = this.ObjectName(createTable.Name, true)
         let name =
