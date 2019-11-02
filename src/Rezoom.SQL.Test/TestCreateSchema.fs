@@ -3,7 +3,7 @@ open Rezoom.SQL.Compiler
 open NUnit.Framework
 
 [<Test>]
-let ``schema`` () =
+let ``schema can contain table`` () =
     { defaultTest with
         Migration = """
             create schema fancy_schema;
