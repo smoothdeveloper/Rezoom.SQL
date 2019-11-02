@@ -85,6 +85,11 @@ let addColumnDef tableName (column : ColumnDef<'t, 'e> WithSource) =
             do! ModelOps.addConstraint tableName constraintName constraintType cols
     }
 
+let createSchema schemaName (_def: CreateSchemaStmt<'t, 'e>) =
+    stateful {
+        do! ModelOps.putSchema schemaName
+    }
+
 let createTableByDefinition tableName (def : CreateTableDefinition<'t, 'e>) =
     stateful {
         do! ModelOps.createEmptyTable tableName

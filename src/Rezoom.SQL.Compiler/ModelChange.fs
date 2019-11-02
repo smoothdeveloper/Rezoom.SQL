@@ -6,11 +6,8 @@ open Rezoom.SQL.Compiler.InferredTypes
 type private ModelChange(model : Model, inference : ITypeInferenceContext) =
     member private this.CreateSchema(create: InfCreateSchemaStmt) =
         stateful {
-            let! model = State.get
-            let schemas = 
-                create.SchemaName
-                |> fun name -> model.Schemas |> Map.add name { SchemaName = name; Objects = Map.empty }
-            return { model with Schemas = schemas }
+            let schema = { SchemaName = create.SchemaName; Objects = Map.empty }
+            return! ComplexModelOps.createSchema schema create
         } |> State.runForOutputState model |> Some
     member private this.CreateTable(create : InfCreateTableStmt) =
         stateful {
