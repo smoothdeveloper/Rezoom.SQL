@@ -686,6 +686,7 @@ type [<NoComparison>] CreateViewStmt<'t, 'e> =
 
 type DropObjectType =
     | DropIndex
+    | DropSchema
     | DropTable
     | DropView
 

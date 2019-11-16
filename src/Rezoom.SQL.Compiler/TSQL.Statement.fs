@@ -28,6 +28,7 @@ type private TSQLStatement(indexer : IParameterIndexer) as this =
                 | DropIndex -> text "INDEX"
                 | DropTable -> text "TABLE"
                 | DropView -> text "VIEW"
+                | DropSchema -> text "SCHEMA"
             yield ws
             yield! this.Expr.ObjectName(drop.ObjectName)
             match drop.Drop with

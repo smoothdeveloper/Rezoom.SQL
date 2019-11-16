@@ -141,7 +141,7 @@ and [<NoComparison>]
     member this.Idempotent =
         match this with
         | TableLike t -> t.Query.Idempotent
-        | Schema
+        | Schema _
         | Index _
         | Missing -> true
     member this.Table =
@@ -155,7 +155,7 @@ and [<NoComparison>]
         | TableLike t -> TableLike (t.Map(f))
         | Index i -> Index i
         | Missing -> Missing
-        | Schema -> Schema
+        | Schema s -> Schema s
 
 and TSelectStmt = SelectStmt<ColumnType ObjectInfo, ColumnType ExprInfo>
 and TCreateViewStmt = CreateViewStmt<ColumnType ObjectInfo, ColumnType ExprInfo>

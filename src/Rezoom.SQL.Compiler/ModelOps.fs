@@ -87,6 +87,17 @@ let putSchema (schema : Schema) =
         return! State.put newModel
     }
 
+/// Remove an existing schema from the model.
+let removeSchema (schemaName : Name option WithSource) =
+    stateful {
+        let! model = State.get
+        let! schema = schemaName |> getRequiredSchema
+        if schema.Objects.Count > 0 then
+            failAt schemaName.Source <| Error.cannotDropSchemaWithObjects schema.SchemaName (schema.Objects |> Map.toArray |> Array.map (fun (k,_) -> k.Value) |> String.concat ", ")
+        let newModel = { model with Schemas = model.Schemas |> Map.remove schema.SchemaName }
+        return! State.put newModel
+    }
+
 /// Create or update an object within an existing schema in the model.
 let putObject (name : QualifiedObjectName WithSource) (obj : SchemaObject) =
     stateful {
@@ -353,6 +364,13 @@ let dropView (viewName : QualifiedObjectName WithSource) =
         return! removeObject viewName
     }
 
+/// Remove an existing schema from the model.
+let dropSchema (schemaName : Name option WithSource) =
+    stateful {
+        let! _ = getRequiredSchema schemaName // ensure it exists
+        return! removeSchema schemaName
+    }
+    
 /// Remove an existing index from the model.
 let dropIndex (indexName : QualifiedObjectName WithSource) =
     stateful {
@@ -364,7 +382,7 @@ let dropIndex (indexName : QualifiedObjectName WithSource) =
         return! removeObject indexName
     }
 
-/// Remove an existing table constraint from the mode.
+/// Remove an existing table constraint from the model.
 let dropConstraint (tableName : QualifiedObjectName WithSource) (constraintName : Name WithSource) =
     stateful {
         let! table = getRequiredTable tableName

@@ -62,10 +62,14 @@ create table dbo.SmokeTable1
 , DateTimeColumn datetime
 , DateTimeOffsetColumn datetimeoffset
 );
+
+create schema foo;
+create table foo.footable ( a int );
             """
         Command =
             """
 with cte as (select GuidColumn, DateTimeOffsetColumn from SmokeTable1 where AutoColumn = 0)
+, cte2 as (select * from foo.footable)
 select s.BooleanColumn
     from SmokeTable1 s
     join cte c on s.GuidColumn = c.GuidColumn
@@ -77,6 +81,7 @@ union all
 select true
 except
 select false
+
             """
         Expect =
             { expect with
@@ -124,6 +129,10 @@ CREATE TABLE [dbo].[SmokeTable1] ( [AutoColumn] INT NOT NULL CONSTRAINT [SmokeTa
 , [BooleanColumn] BIT NOT NULL
 , [DateTimeColumn] DATETIME2 NOT NULL
 , [DateTimeOffsetColumn] DATETIMEOFFSET NOT NULL );
+CREATE SCHEMA [foo];
+CREATE TABLE [foo].[footable]
+( [a] INT NOT NULL
+);
                     """ |> Some
                 OutputCommand =
                     """
@@ -131,6 +140,11 @@ WITH [cte] AS (
     SELECT [SmokeTable1].[GuidColumn] , [SmokeTable1].[DateTimeOffsetColumn]
     FROM [SmokeTable1]
     WHERE ([SmokeTable1].[AutoColumn] = 0)
+),[cte2]
+AS (
+SELECT
+[footable].[a]
+FROM [foo].[footable]
 )
 ((SELECT [s].[BooleanColumn]
     FROM [SmokeTable1] AS [s]

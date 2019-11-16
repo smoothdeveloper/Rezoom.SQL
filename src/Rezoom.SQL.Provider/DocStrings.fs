@@ -12,6 +12,7 @@ let private shortDescriptionCore (statement : Stmt<_, _>) =
     | DropObjectStmt { Drop = DropIndex } -> "DROP INDEX"
     | DropObjectStmt { Drop = DropTable } -> "DROP TABLE"
     | DropObjectStmt { Drop = DropView } -> "DROP VIEW"
+    | DropObjectStmt { Drop = DropSchema } -> "DROP SCHEMA"
     | InsertStmt _ -> "INSERT"
     | SelectStmt _ -> "SELECT"
     | UpdateStmt _ -> "UPDATE"
