@@ -114,6 +114,7 @@ type InfCompoundExpr = CompoundExpr<InferredType ObjectInfo, InferredType ExprIn
 type InfCompoundTermCore = CompoundTermCore<InferredType ObjectInfo, InferredType ExprInfo>
 type InfCompoundTerm = CompoundTerm<InferredType ObjectInfo, InferredType ExprInfo>
 type InfCreateTableDefinition = CreateTableDefinition<InferredType ObjectInfo, InferredType ExprInfo>
+type InfCreateSchemaStmt = CreateSchemaStmt<InferredType ObjectInfo, InferredType ExprInfo>
 type InfCreateTableStmt = CreateTableStmt<InferredType ObjectInfo, InferredType ExprInfo>
 type InfSelectCore = SelectCore<InferredType ObjectInfo, InferredType ExprInfo>
 type InfJoinConstraint = JoinConstraint<InferredType ObjectInfo, InferredType ExprInfo>
@@ -264,6 +265,9 @@ and [<NoComparison>]
                 ParentScope = Some this
         }
 
+    member private this.ResolveSchema
+        (schema : Schema) =
+        Found (ObjectInfo.Schema schema)
     member private this.ResolveObjectReferenceBySchema
         (schema : Schema, name : Name, inferView : CreateViewStmt -> TCreateViewStmt) =
         match schema.Objects |> Map.tryFind name with
@@ -280,6 +284,10 @@ and [<NoComparison>]
     /// Resolve a reference to a table which may occur as part of a TableExpr.
     /// This will resolve against the database model and CTEs, but not table aliases defined in the FROM clause.
     member this.ResolveObjectReference(name : ObjectName, inferView) =
+        match this.Model.Schema (Some name.ObjectName) with
+        | Some schema ->
+            this.ResolveSchema(schema)
+        | None ->
         match name.SchemaName with
         | None ->
             match this.CTEVariables.TryFind(name.ObjectName) with

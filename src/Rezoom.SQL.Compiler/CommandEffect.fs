@@ -71,6 +71,7 @@ and private CommandEffectBuilder(model : Model) =
         match stmt with
         | AlterTableStmt { Alteration = AddColumn _ | AddConstraint _ | AddDefault _ }
         | CreateIndexStmt _
+        | CreateSchemaStmt _
         | CreateTableStmt _
         | SelectStmt _
         | CreateViewStmt _ -> false

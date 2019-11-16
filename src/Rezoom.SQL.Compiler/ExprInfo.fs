@@ -134,12 +134,14 @@ and [<NoComparison>]
 and [<NoComparison>]
     [<NoEquality>]
     ObjectInfo<'t> =
+    | Schema of Schema
     | TableLike of 't TableLikeExprInfo
     | Index of SchemaIndex
     | Missing
     member this.Idempotent =
         match this with
         | TableLike t -> t.Query.Idempotent
+        | Schema _
         | Index _
         | Missing -> true
     member this.Table =
@@ -153,7 +155,7 @@ and [<NoComparison>]
         | TableLike t -> TableLike (t.Map(f))
         | Index i -> Index i
         | Missing -> Missing
-
+        | Schema s -> Schema s
 
 and TSelectStmt = SelectStmt<ColumnType ObjectInfo, ColumnType ExprInfo>
 and TCreateViewStmt = CreateViewStmt<ColumnType ObjectInfo, ColumnType ExprInfo>
@@ -182,6 +184,7 @@ type TCompoundTerm = CompoundTerm<ColumnType ObjectInfo, ColumnType ExprInfo>
 type TForeignKeyClause = ForeignKeyClause<ColumnType ObjectInfo>
 type TCreateTableDefinition = CreateTableDefinition<ColumnType ObjectInfo, ColumnType ExprInfo>
 type TCreateTableStmt = CreateTableStmt<ColumnType ObjectInfo, ColumnType ExprInfo>
+type TCreateSchemaStmt = CreateSchemaStmt<ColumnType ObjectInfo, ColumnType ExprInfo>
 type TSelectCore = SelectCore<ColumnType ObjectInfo, ColumnType ExprInfo>
 type TJoinConstraint = JoinConstraint<ColumnType ObjectInfo, ColumnType ExprInfo>
 type TJoin = Join<ColumnType ObjectInfo, ColumnType ExprInfo>

@@ -582,11 +582,15 @@ type [<NoComparison>] CreateTableDefinition<'t, 'e> =
 type [<NoComparison>] CreateTableAs<'t, 'e> =
     | CreateAsDefinition of CreateTableDefinition<'t, 'e>
     | CreateAsSelect of SelectStmt<'t, 'e>
-
+    
 type [<NoComparison>] CreateTableStmt<'t, 'e> =
     {   Temporary : bool
         Name : ObjectName<'t>
         As : CreateTableAs<'t, 'e>
+    }
+
+type [<NoComparison>] CreateSchemaStmt<'t,'e> =
+    {   SchemaName : Name  
     }
 
 type [<NoComparison>] CreateIndexStmt<'t, 'e> =
@@ -682,6 +686,7 @@ type [<NoComparison>] CreateViewStmt<'t, 'e> =
 
 type DropObjectType =
     | DropIndex
+    | DropSchema
     | DropTable
     | DropView
 
@@ -703,6 +708,7 @@ type [<NoComparison>] VendorStmt<'t, 'e> =
 and [<NoComparison>] Stmt<'t, 'e> =
     | AlterTableStmt of AlterTableStmt<'t, 'e>
     | CreateIndexStmt of CreateIndexStmt<'t, 'e>
+    | CreateSchemaStmt of CreateSchemaStmt<'t,'e>
     | CreateTableStmt of CreateTableStmt<'t, 'e>
     | CreateViewStmt of CreateViewStmt<'t, 'e>
     | DeleteStmt of DeleteStmt<'t, 'e>
@@ -746,6 +752,7 @@ type CompoundExpr = CompoundExpr<unit, unit>
 type CompoundTermCore = CompoundTermCore<unit, unit>
 type CompoundTerm = CompoundTerm<unit, unit>
 type CreateTableDefinition = CreateTableDefinition<unit, unit>
+type CreateSchemaStmt = CreateSchemaStmt<unit, unit>
 type CreateTableStmt = CreateTableStmt<unit, unit>
 type SelectCore = SelectCore<unit, unit>
 type Join = Join<unit, unit>

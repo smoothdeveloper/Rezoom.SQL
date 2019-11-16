@@ -352,6 +352,14 @@ type DefaultStatementTranslator(expectedVendorName : Name, indexer : IParameterI
             let constraints = create.Constraints |> Seq.map (fun c -> this.TableConstraint(table, c.Value))
             yield! Seq.append columns constraints |> parencols
         }
+    override this.CreateSchema(create:TCreateSchemaStmt) =
+        seq {
+            yield text "CREATE"
+            yield ws
+            yield text "SCHEMA"
+            yield ws
+            yield this.Expr.Name(create.SchemaName)
+        }
     override this.CreateTable(create) =
         seq {
             yield text "CREATE"
@@ -485,6 +493,7 @@ type DefaultStatementTranslator(expectedVendorName : Name, indexer : IParameterI
                 | DropIndex -> text "INDEX"
                 | DropTable -> text "TABLE"
                 | DropView -> text "VIEW"
+                | DropSchema -> text "SCHEMA"
             yield ws
             yield! this.Expr.ObjectName(drop.ObjectName)
         }
@@ -609,6 +618,7 @@ type DefaultStatementTranslator(expectedVendorName : Name, indexer : IParameterI
     override this.Statement(stmt) =
         match stmt with
         | AlterTableStmt alter -> this.AlterTable(alter)
+        | CreateSchemaStmt create -> this.CreateSchema(create)
         | CreateTableStmt create -> this.CreateTable(create)
         | CreateViewStmt create -> this.CreateView(create)
         | CreateIndexStmt create -> this.CreateIndex(create)

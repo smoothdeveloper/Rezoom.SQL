@@ -4,6 +4,11 @@ open System.Collections.Generic
 open Rezoom.SQL.Compiler.InferredTypes
 
 type private ModelChange(model : Model, inference : ITypeInferenceContext) =
+    member private this.CreateSchema(create: InfCreateSchemaStmt) =
+        stateful {
+            let schema = { SchemaName = create.SchemaName; Objects = Map.empty }
+            return! ComplexModelOps.createSchema schema create
+        } |> State.runForOutputState model |> Some
     member private this.CreateTable(create : InfCreateTableStmt) =
         stateful {
             let! tableName = ComplexModelOps.qualifyTemp create.Temporary create.Name
@@ -64,6 +69,8 @@ type private ModelChange(model : Model, inference : ITypeInferenceContext) =
                 return! ModelOps.dropView objName
             | DropTable ->
                 return! ModelOps.dropTable objName
+            | DropSchema ->
+                return! ModelOps.dropSchema { Value = Some drop.ObjectName.ObjectName; Source = objName.Source }
         } |> State.runForOutputState model |> Some
     member this.CreateIndex(create : InfCreateIndexStmt) =
         stateful {
@@ -75,6 +82,7 @@ type private ModelChange(model : Model, inference : ITypeInferenceContext) =
     member this.Stmt(stmt : InfStmt) =
         match stmt with
         | AlterTableStmt alter -> this.AlterTable(alter)
+        | CreateSchemaStmt create -> this.CreateSchema(create)
         | CreateTableStmt create -> this.CreateTable(create)
         | CreateViewStmt create -> this.CreateView(create)
         | CreateIndexStmt create -> this.CreateIndex(create)

@@ -12,6 +12,7 @@ type ASTMapping<'t1, 'e1, 't2, 'e2>(mapT : 't1 -> 't2, mapE : 'e1 -> 'e2) =
         {   Operator = unary.Operator
             Operand = this.Expr(unary.Operand)
         }
+    member this.Name = Name
     member this.ObjectName(objectName : ObjectName<'t1>) =
         {   SchemaName = objectName.SchemaName
             ObjectName = objectName.ObjectName
@@ -277,6 +278,10 @@ type ASTMapping<'t1, 'e1, 't2, 'e2>(mapT : 't1 -> 't2, mapE : 'e1 -> 'e2) =
         {   Columns = createTable.Columns |> rmap this.ColumnDef
             Constraints = createTable.Constraints |> rmap this.TableConstraint
         }
+
+    member this.CreateSchema(createSchemaStmt: CreateSchemaStmt<'t1,'e1>) =
+        { SchemaName = createSchemaStmt.SchemaName
+        }
     member this.CreateTable(createTable : CreateTableStmt<'t1, 'e1>) =
         {   Temporary = createTable.Temporary
             Name = this.ObjectName(createTable.Name)
@@ -327,6 +332,7 @@ type ASTMapping<'t1, 'e1, 't2, 'e2>(mapT : 't1 -> 't2, mapE : 'e1 -> 'e2) =
                     Alteration = this.Alteration(alter.Alteration)
                 }
         | CreateIndexStmt index -> CreateIndexStmt <| this.CreateIndex(index)
+        | CreateSchemaStmt createSchema -> CreateSchemaStmt <| this.CreateSchema(createSchema)
         | CreateTableStmt createTable -> CreateTableStmt <| this.CreateTable(createTable)
         | CreateViewStmt createView -> CreateViewStmt <| this.CreateView(createView)
         | DeleteStmt delete -> DeleteStmt <| this.Delete(delete)
