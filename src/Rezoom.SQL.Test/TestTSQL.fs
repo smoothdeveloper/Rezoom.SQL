@@ -176,6 +176,32 @@ alter table foo drop column x;
     } |> assertSimple
 
 [<Test>]
+let ``tsql create and drop schema is ok`` () =
+    { tsqlTest with
+        Migration =
+            """
+create schema s;            
+create table s.foo(x int default 0, y int);
+drop table s.foo;
+drop schema s;
+            """
+        Expect = expect |> Good
+    } |> assertSimple
+    
+[<Test>]
+let ``tsql create and drop schema with objects is not ok`` () =
+    { tsqlTest with
+        Migration =
+            """
+create schema s;            
+create table s.foo(x int default 0, y int);
+create table s.bar(x int default 0, y int);
+drop schema s;
+            """
+        Expect = BadMigration <| Error.cannotDropSchemaWithObjects "s" "bar, foo"
+    } |> assertSimple
+
+[<Test>]
 let ``tsql dump function signatures`` () =
     for KeyValue(_, func) in tsqlTest.TestBackend.InitialModel.Builtin.Functions do
         printfn "%s" (dumpSignature func)

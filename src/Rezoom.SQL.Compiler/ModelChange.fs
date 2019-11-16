@@ -69,6 +69,8 @@ type private ModelChange(model : Model, inference : ITypeInferenceContext) =
                 return! ModelOps.dropView objName
             | DropTable ->
                 return! ModelOps.dropTable objName
+            | DropSchema ->
+                return! ModelOps.dropSchema { Value = Some drop.ObjectName.ObjectName; Source = objName.Source }
         } |> State.runForOutputState model |> Some
     member this.CreateIndex(create : InfCreateIndexStmt) =
         stateful {

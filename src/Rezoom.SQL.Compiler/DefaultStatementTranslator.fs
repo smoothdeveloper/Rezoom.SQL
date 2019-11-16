@@ -493,6 +493,7 @@ type DefaultStatementTranslator(expectedVendorName : Name, indexer : IParameterI
                 | DropIndex -> text "INDEX"
                 | DropTable -> text "TABLE"
                 | DropView -> text "VIEW"
+                | DropSchema -> text "SCHEMA"
             yield ws
             yield! this.Expr.ObjectName(drop.ObjectName)
         }

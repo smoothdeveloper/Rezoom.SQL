@@ -159,3 +159,6 @@ let updateDuplicateColumn columnName =
 
 let tableNameNotSuitableForPG =
     "SQ069: Table name is not suitable for PG (maybe you thought you were writing R?)"
+    
+let cannotDropSchemaWithObjects schemaName objectNames =
+    sprintf "SQ070: Cannot drop the schema ``%O`` while it still contains object(s) (%O)" schemaName objectNames

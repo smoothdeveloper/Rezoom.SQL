@@ -1172,6 +1172,7 @@ let private dropObjectType =
     %[  %% kw "INDEX" -|> DropIndex
         %% kw "TABLE" -|> DropTable
         %% kw "VIEW" -|> DropView
+        %% kw "SCHEMA" -|> DropSchema
     ]
 
 let private dropObjectStmt =
